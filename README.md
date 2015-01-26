@@ -13,19 +13,37 @@ _Answer_: Docker Hub does not _currently_ support private git submodules from gi
 
 First move an `id_rsa` and `id_rsa.pub` into `ssh/` that has credentials for your github account.
 
-Then make a repos configuration directory like `repos/` with a `repos.conf` inside that configures which repos you want to build.
+Now we build the image:
+```
+docker build -t you/docker-autobuilder .
+```
+
+_NOTE_: DONT PUSH THIS PUBLICLY. Its got your private key in it!
+
+Then make a repos configuration `repos/repos.lua` based off of `example.lua` inside that configures which repos you want to build.
+
+If I wanted to build the github repo `notacatjs/dommit` into the docker image `notacatjs/dommit-autobuild`, I'd put this into the `repos/repos.lua`:
+
+```lua
+imagemap = {
+  ["notacatjs/dommit"] = "notacatjs/dommit-autobuild"
+};
+
+return imagemap
+```
+
+Now we run the autobuilder:
 
 ```
 docker run \
-    --volume $(pwd)/ssh:/root/.ssh \
-    --volume <your_repos_conf_dir>:/app/repos \
+    --volume $(pwd)/repos:/app/repos \
     --volume /var/run:/host/var/run \
     --publish 80:80 \
     --env DOCKER_EMAIL="login@hub.docker.io" \
     --env DOCKER_PASSWORD="yourpassword" \
     --env DOCKER_USERNAME="yourusername" \
     --env DOCKER_INDEX="https://index.docker.io/v1/"
-    yanatan16/docker-autobuilder
+    you/docker-autobuilder
 ```
 
 To test:
