@@ -13,7 +13,7 @@ function runf() {
 echo "Building $FULLREPO and tagging as $IMAGE." | tee -a /var/log/dockerbuild.log
 
 cd $TMP
-runf git clone -b $BRANCH git@github.com:$REPO builddir
+runf git clone --recursive -b $BRANCH git@github.com:$REPO builddir
 runf sudo docker -H "unix:///host/var/run/docker.sock" \
   build -t $IMAGE builddir
 runf sudo docker -H "unix:///host/var/run/docker.sock" \
