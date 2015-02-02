@@ -15,7 +15,7 @@ echo "Building $FULLREPO and tagging as $IMAGE." | tee -a /var/log/dockerbuild.l
 cd $TMP
 runf git clone --recursive -b $BRANCH git@github.com:$REPO builddir
 runf sudo docker -H "unix:///host/var/run/docker.sock" \
-  build -t $IMAGE builddir
+  build -t $IMAGE --pull builddir
 runf sudo docker -H "unix:///host/var/run/docker.sock" \
   push $IMAGE 2>&1
 cd -
